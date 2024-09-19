@@ -62,7 +62,7 @@ username = st.secrets["username"]
 password = st.secrets["password"]
 
 
-st.write(st.session_state.logged_in)
+st.set_page_config(page_title="HYD PMU Data")
 
 # UI for login
 if not st.session_state.logged_in:
@@ -70,10 +70,8 @@ if not st.session_state.logged_in:
 	username = st.text_input("Username")
 	password = st.text_input("Password", type="password")
 	if st.button("Login"):
-		st.write("BUTOON PRESSED")
 		if authenticate(username, password):
 			st.session_state.logged_in = True
-			st.write("SUCESSFULLLLLLLLLLLLLLLL")
 			st.rerun()
 		else:
 			st.error("Invalid username or password")
@@ -82,7 +80,6 @@ if not st.session_state.logged_in:
 if st.session_state.logged_in:          
 
 	# Show the page title and description.
-	st.set_page_config(page_title="HYD PMU Data")
 	st.title("Hyderabad PMU Data")
 	st.sidebar.title("Options")
 	if st.sidebar.button("Logout"):
