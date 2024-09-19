@@ -63,6 +63,9 @@ folder_name = st.secrets["folder_name"]
 username = st.secrets["username"]
 password = st.secrets["password"]
 
+
+st.write(st.session_state.logged_in)
+
 # UI for login
 if not st.session_state.logged_in:
 	st.title("Login")
@@ -74,8 +77,6 @@ if not st.session_state.logged_in:
 			st.rerun()
 		else:
 			st.error("Invalid username or password")
-
-
 
 
 if st.session_state.logged_in:          
