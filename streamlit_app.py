@@ -88,11 +88,15 @@ if st.session_state.logged_in:
 	
 	df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
 	
-	# Show a multiselect widget with the genres using `st.multiselect`.
+	# Get unique mac_id values
+	unique_mac_ids = df["mac_id"].unique().tolist()
+	
+	# Add a multiselect widget with a default selection of all mac_ids
 	filtered_mac_ids = st.multiselect(
-	    "mac_id",
-	    df.mac_id.unique(),
-	    df["mac_id"].unique().tolist()
+	    "Select mac_id(s)",
+	    options=unique_mac_ids,
+	    default=unique_mac_ids,  # Select all by default
+	    help="You can select specific mac_ids. All are selected by default."
 	)
 	
 	# Filter the dataframe based on the widget input and reshape it.
