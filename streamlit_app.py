@@ -92,7 +92,7 @@ if st.session_state.logged_in:
 	filtered_mac_ids = st.multiselect(
 	    "mac_id",
 	    df.mac_id.unique(),
-	    df["mac_id"].unique.tolist()
+	    df["mac_id"].unique().tolist()
 	)
 	
 	# Filter the dataframe based on the widget input and reshape it.
