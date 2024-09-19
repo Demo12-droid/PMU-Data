@@ -83,10 +83,10 @@ if st.session_state.logged_in:
     # Show the page title and description.
     st.set_page_config(page_title="HYD PMU Data")
     st.title("Hyderabad PMU Data")
-	st.sidebar.title("Options")
-	if st.sidebar.button("Logout"):
-		logout()
-		st.rerun()
+    st.sidebar.title("Options")
+    if st.sidebar.button("Logout"):
+	logout()
+	st.rerun()
 
     df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
     
