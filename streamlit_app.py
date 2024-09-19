@@ -71,6 +71,7 @@ if not st.session_state.logged_in:
 	username = st.text_input("Username")
 	password = st.text_input("Password", type="password")
 	if st.button("Login"):
+		st.write("BUTOON PRESSED")
 		if authenticate(username, password):
 			st.session_state.logged_in == True
 			st.write("SUCESSFULLLLLLLLLLLLLLLL")
@@ -81,42 +82,42 @@ if not st.session_state.logged_in:
 
 if st.session_state.logged_in:          
 
-    # Show the page title and description.
-    st.set_page_config(page_title="HYD PMU Data")
-    st.title("Hyderabad PMU Data")
-    st.sidebar.title("Options")
-    if st.sidebar.button("Logout"):
+	# Show the page title and description.
+	st.set_page_config(page_title="HYD PMU Data")
+	st.title("Hyderabad PMU Data")
+	st.sidebar.title("Options")
+	if st.sidebar.button("Logout"):
 	    logout()
 	    st.rerun()
-
-    df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
-    
-    # Display the data as a table using `st.dataframe`.
-    st.dataframe(
-        df,
-        use_container_width=True,
-        column_config={"mac_id": st.column_config.TextColumn("mac_id")},
-    )
-    
-    # Convert the 'timestamp' column to datetime if it's not already
-    df['timestamp'] = pd.to_datetime(df['timestamp'])
-    
-    # Plot for timestamp vs battery_voltage
-    fig1 = px.scatter(df, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
-                      title='Timestamp vs Battery Voltage',
-                      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
-    
-    # Plot for timestamp vs inverter_voltage
-    fig2 = px.scatter(df, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
-                      title='Timestamp vs Inverter Voltage',
-                      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
-    
-    # Plot for timestamp vs solar_voltage
-    fig3 = px.scatter(df, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
-                      title='Timestamp vs Solar Voltage',
-                      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
-    
-    # Display the figures
-    st.plotly_chart(fig1, use_container_width=True)
-    st.plotly_chart(fig2, use_container_width=True)
-    st.plotly_chart(fig3, use_container_width=True)
+	
+	df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
+	
+	# Display the data as a table using `st.dataframe`.
+	st.dataframe(
+	df,
+	use_container_width=True,
+	column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	)
+	
+	# Convert the 'timestamp' column to datetime if it's not already
+	df['timestamp'] = pd.to_datetime(df['timestamp'])
+	
+	# Plot for timestamp vs battery_voltage
+	fig1 = px.scatter(df, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
+		      title='Timestamp vs Battery Voltage',
+		      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
+	
+	# Plot for timestamp vs inverter_voltage
+	fig2 = px.scatter(df, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
+		      title='Timestamp vs Inverter Voltage',
+		      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
+	
+	# Plot for timestamp vs solar_voltage
+	fig3 = px.scatter(df, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
+		      title='Timestamp vs Solar Voltage',
+		      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
+	
+	# Display the figures
+	st.plotly_chart(fig1, use_container_width=True)
+	st.plotly_chart(fig2, use_container_width=True)
+	st.plotly_chart(fig3, use_container_width=True)
