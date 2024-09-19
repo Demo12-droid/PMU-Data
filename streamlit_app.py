@@ -6,8 +6,8 @@ from io import StringIO
 import plotly.express as px
 
 def authenticate(username, password):
-	user = users_db.get(username)
-	if user and user["password"] == password:
+	user = st.secrets["username"]
+	if username == user and user["password"] == password:
 		return True
 	return False
 	
