@@ -12,7 +12,6 @@ def authenticate(username, password):
 	
 def logout():
 	st.session_state.logged_in = False
-	st.session_state.selected_option = None
 	
 def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key):
     try:
