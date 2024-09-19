@@ -90,17 +90,21 @@ if st.session_state.logged_in:
 	
 	# Get unique mac_id values
 	unique_mac_ids = df["mac_id"].unique().tolist()
+	mac_id_options = ["Select All"] + unique_mac_ids
 	
 	# Add a multiselect widget with a default selection of all mac_ids
 	filtered_mac_ids = st.multiselect(
 	    "Select mac_id(s)",
-	    options=unique_mac_ids,
-	    default=unique_mac_ids,  # Select all by default
+	    options = mac_id_options,
+	    default = ["Select All"],  # Select all by default
 	    help="You can select specific mac_ids. All are selected by default."
 	)
-	
-	# Filter the dataframe based on the widget input and reshape it.
-	df_filtered = df[(df["mac_id"].isin(filtered_mac_ids))]
+
+	if "Select_all" in filtered_mac_ids:
+		df_filtered = df
+	else:
+		# Filter the dataframe based on the widget input and reshape it.
+		df_filtered = df[(df["mac_id"].isin(filtered_mac_ids))]
 	
 	
 	# Display the data as a table using `st.dataframe`.
