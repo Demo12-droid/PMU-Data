@@ -91,7 +91,8 @@ if st.session_state.logged_in:
 	# Show a multiselect widget with the genres using `st.multiselect`.
 	filtered_mac_ids = st.multiselect(
 	    "mac_id",
-	    df.mac_id.unique()
+	    df.mac_id.unique(),
+	    df["mac_id"].unique
 	)
 	
 	# Filter the dataframe based on the widget input and reshape it.
