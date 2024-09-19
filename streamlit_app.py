@@ -88,13 +88,23 @@ if st.session_state.logged_in:
 	
 	df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
 	
-	# Display the data as a table using `st.dataframe`.
-	st.dataframe(
-	df,
-	use_container_width=True,
-	column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	# Show a multiselect widget with the genres using `st.multiselect`.
+	genres = st.multiselect(
+	    "mac_id",
+	    df.mac_id.unique()
 	)
 	
+	# Filter the dataframe based on the widget input and reshape it.
+	df_filtered = df[(df["mac_id"].isin(mac_id))]
+	
+	
+	# Display the data as a table using `st.dataframe`.
+	st.dataframe(
+	df_filtered,
+	use_container_width=True,
+	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	)
+		
 	# Convert the 'timestamp' column to datetime if it's not already
 	df['timestamp'] = pd.to_datetime(df['timestamp'])
 	
