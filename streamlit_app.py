@@ -100,7 +100,7 @@ if st.session_state.logged_in:
 	    help="You can select specific mac_ids. All are selected by default."
 	)
 
-	if "Select_all" in filtered_mac_ids:
+	if "Select All" in filtered_mac_ids:
 		df_filtered = df
 	else:
 		# Filter the dataframe based on the widget input and reshape it.
@@ -118,17 +118,17 @@ if st.session_state.logged_in:
 	df['timestamp'] = pd.to_datetime(df['timestamp'])
 	
 	# Plot for timestamp vs battery_voltage
-	fig1 = px.scatter(df, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
+	fig1 = px.scatter(df_filtered, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
 		      title='Timestamp vs Battery Voltage',
 		      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
 	
 	# Plot for timestamp vs inverter_voltage
-	fig2 = px.scatter(df, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
+	fig2 = px.scatter(df_filtered, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
 		      title='Timestamp vs Inverter Voltage',
 		      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
 	
 	# Plot for timestamp vs solar_voltage
-	fig3 = px.scatter(df, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
+	fig3 = px.scatter(df_filtered, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
 		      title='Timestamp vs Solar Voltage',
 		      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
 	
