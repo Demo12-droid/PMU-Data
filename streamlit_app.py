@@ -7,7 +7,7 @@ import plotly.express as px
 
 def authenticate(username, password):
 	user = st.secrets["username"]
-	if username == user and user["password"] == password:
+	if username == user and st.secrets["password"] == password:
 		return True
 	return False
 	
