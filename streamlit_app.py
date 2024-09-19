@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import boto3
 from io import StringIO
+import plotly.express as px
 
 def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key):
     try:
@@ -64,18 +65,25 @@ st.dataframe(
     column_config={"mac_id": st.column_config.TextColumn("mac_id")},
 )
 
-# Display the data as an Altair chart using `st.altair_chart`.
-df_chart = pd.melt(
-    df.reset_index(), id_vars="Timestamp", var_name="battery_volatge", value_name="battery_volatge"
-)
-chart = (
-    alt.Chart(df_chart)
-    .mark_line()
-    .encode(
-        x=alt.X("timestamp:N", title="Timestamp"),
-        y=alt.Y("battery_voltage:Q", title="Battery Voltage"),
-        color="genre:N",
-    )
-    .properties(height=320)
-)
-st.altair_chart(chart, use_container_width=True)
+# Convert the 'timestamp' column to datetime if it's not already
+df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+# Plot for timestamp vs battery_voltage
+fig1 = px.scatter(df, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
+                  title='Timestamp vs Battery Voltage',
+                  labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
+
+# Plot for timestamp vs inverter_voltage
+fig2 = px.scatter(df, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
+                  title='Timestamp vs Inverter Voltage',
+                  labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
+
+# Plot for timestamp vs solar_voltage
+fig3 = px.scatter(df, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
+                  title='Timestamp vs Solar Voltage',
+                  labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
+
+# Display the figures
+st.plotly_chart(fig1, use_container_width=True)
+st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig3, use_container_width=True)
