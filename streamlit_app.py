@@ -53,9 +53,8 @@ if not st.session_state.logged_in:
 	password = st.text_input("Password", type="password")
 	if st.button("Login"):
 		if authenticate(username, password):
-            st.session_state.logged_in == True            
-	        st.rerun()
-				
+			st.session_state.logged_in == True
+			st.rerun()
 		else:
 			st.error("Invalid username or password")
 
