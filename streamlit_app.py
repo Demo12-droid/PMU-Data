@@ -61,12 +61,12 @@ df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_s
 st.dataframe(
     df,
     use_container_width=True,
-    # column_config={"year": st.column_config.TextColumn("Year")},
+    column_config={"mac_id": st.column_config.TextColumn("mac_id")},
 )
 
 # Display the data as an Altair chart using `st.altair_chart`.
 df_chart = pd.melt(
-    df_reshaped.reset_index(), id_vars="Timestamp", var_name="battery_volatge", value_name="battery_volatge"
+    df.reset_index(), id_vars="Timestamp", var_name="battery_volatge", value_name="battery_volatge"
 )
 chart = (
     alt.Chart(df_chart)
