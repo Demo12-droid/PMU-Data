@@ -134,7 +134,7 @@ if st.session_state.logged_in:
 	with col2:
 	    # Display Inverter values in a text area (voltage and charge)
 	    st.write("Inverter")
-	    inverter_info = '\n'.join([f"Voltage: {v} \n Frequency: {c} \n Load Current; {l}" for v, c, l in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'],latest_entry["load_current_on_inverter"])])
+	    inverter_info = '\n'.join([f"Voltage: {v} \n Frequency: {c} \n Load Current: {l}" for v, c, l in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'],latest_entry["load_current_on_inverter"])])
 	    st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
 	    
 	    # Display Solar values in a text area (power and charge)
