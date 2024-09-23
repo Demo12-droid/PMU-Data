@@ -116,6 +116,8 @@ if st.session_state.logged_in:
 	df['timestamp'] = pd.to_datetime(df['timestamp'])
 
 	latest_entry = df.loc[[df['timestamp'].idxmax()]]
+
+	st.write(f"Timestamp : ",latest_entry["timestamp"])
 	
 	# Layout
 	col1, col2 = st.columns(2)
