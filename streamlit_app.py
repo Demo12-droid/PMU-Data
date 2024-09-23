@@ -120,8 +120,8 @@ if st.session_state.logged_in:
 
 
 	dt = pd.to_datetime(latest_entry["timestamp"].iloc[0])
-	formatted_timestamp = dt.strftime('%Y-%m-%d  %H-%M-%S')
-	st.write(f"Timestamp : ",formatted_timestamp)
+	formatted_timestamp = dt.strftime('%Y-%m-%d %H:%M:%S')
+	st.write(f"Latest : ",formatted_timestamp)
 	
 	# Layout
 	col1, col2 = st.columns(2)
