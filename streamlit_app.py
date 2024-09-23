@@ -137,7 +137,7 @@ if st.session_state.logged_in:
 	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
 	    
 	    # Display Mains values in a text area (voltage and status)
-	    st.write("Mains")
+	    st.write("Mains" + get_indicator(latest_entry['power_status'].iloc[0]), unsafe_allow_html=True)
 	    mains_info = '\n'.join([f"Voltage: {v} \n Frequency: {f} \n Charging Current: {c}" for v, f, c in zip(latest_entry['mains_voltage'], latest_entry['mains_frequency'],latest_entry['mains_charging_current'])])
 	    st.text_area("Mains Info", mains_info, height=100, disabled=True)
 	
@@ -151,32 +151,3 @@ if st.session_state.logged_in:
 	    st.write("Solar" + get_indicator(latest_entry['solar_status'].iloc[0]), unsafe_allow_html=True)
 	    solar_info = '\n'.join([f"Voltage: {v} \n Power Generation: {p} \n Charging Current: {c}" for v, p, c in zip(latest_entry['solar_voltage'], latest_entry['solar_charging_current'], latest_entry['solar_power_generation'])])
 	    st.text_area("Solar Info", solar_info, height=100, disabled=True)
-
-	
-	
-
-
-
-
-
-
-	
-	# # Plot for timestamp vs battery_voltage
-	# fig1 = px.scatter(df_filtered, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
-	# 	      title='Timestamp vs Battery Voltage',
-	# 	      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
-	
-	# # Plot for timestamp vs inverter_voltage
-	# fig2 = px.scatter(df_filtered, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
-	# 	      title='Timestamp vs Inverter Voltage',
-	# 	      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
-	
-	# # Plot for timestamp vs solar_voltage
-	# fig3 = px.scatter(df_filtered, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
-	# 	      title='Timestamp vs Solar Voltage',
-	# 	      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
-	
-	# # Display the figures
-	# st.plotly_chart(fig1, use_container_width=True)
-	# st.plotly_chart(fig2, use_container_width=True)
-	# st.plotly_chart(fig3, use_container_width=True)
