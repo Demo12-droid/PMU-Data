@@ -122,13 +122,17 @@ if st.session_state.logged_in:
 	dt = pd.to_datetime(latest_entry["timestamp"].iloc[0])
 	
 	st.write(f"Latest : ",dt.strftime('%Y-%m-%d %H:%M:%S'))
+
+	def get_indicator(value):
+    		return '<span style="color: green;">✔️</span>' if value.split() == "t" else '<span style="color: red;">❌</span>'
+
 	
 	# Layout
 	col1, col2 = st.columns(2)
 	
 	with col1:
 	    # Display Battery values in a text area (voltage and charge)
-	    st.write("Battery")
+	    st.write("Battery" + get_indicator(latest_entry['battery_status'][0]), unsafe_allow_html=True)
 	    battery_info = '\n'.join([f"Voltage: {v} \n Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
 	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
 	    
@@ -139,12 +143,12 @@ if st.session_state.logged_in:
 	
 	with col2:
 	    # Display Inverter values in a text area (voltage and charge)
-	    st.write("Inverter")
+	    st.write("Inverter" + get_indicator(latest_entry['inverter_status'][0]), unsafe_allow_html=True)
 	    inverter_info = '\n'.join([f"Voltage: {v} \n Frequency: {c} \n Load Current: {l}" for v, c, l in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'],latest_entry["load_current_on_inverter"])])
 	    st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
 	    
 	    # Display Solar values in a text area (power and charge)
-	    st.write("Solar")
+	    st.write("Solar" + get_indicator(latest_entry['solar_status'][0]), unsafe_allow_html=True)
 	    solar_info = '\n'.join([f"Voltage: {v} \n Power Generation: {p} \n Charging Current: {c}" for v, p, c in zip(latest_entry['solar_voltage'], latest_entry['solar_charging_current'], latest_entry['solar_power_generation'])])
 	    st.text_area("Solar Info", solar_info, height=100, disabled=True)
 
