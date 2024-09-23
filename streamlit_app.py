@@ -90,49 +90,83 @@ if st.session_state.logged_in:
 	
 	# Get unique mac_id values
 	unique_mac_ids = df["mac_id"].unique().tolist()
-	mac_id_options = ["Select All"] + unique_mac_ids
+	mac_id_options = unique_mac_ids
 	
-	# Add a multiselect widget with a default selection of all mac_ids
-	filtered_mac_ids = st.multiselect(
-	    "Select mac_id(s)",
-	    options = mac_id_options,
-	    default = ["Select All"],  # Select all by default
-	    help="You can select specific mac_ids. All are selected by default."
+	# Add a singleselect widget with a default selection of all mac_ids
+	filtered_mac_id = st.selectbox(
+	    "Select mac_id",
+	    options=mac_id_options,
+	    index=0,  # Default selected option
+	    help="You can select a specific mac_id."
 	)
 
-	if "Select All" in filtered_mac_ids:
-		df_filtered = df
-	else:
-		# Filter the dataframe based on the widget input and reshape it.
-		df_filtered = df[(df["mac_id"].isin(filtered_mac_ids))]
 	
+	# Filter the dataframe based on the widget input and reshape it.
+	df_filtered = df[df["mac_id"] == filtered_mac_id]
+
 	
-	# Display the data as a table using `st.dataframe`.
-	st.dataframe(
-	df_filtered,
-	use_container_width=True,
-	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
-	)
+	# # Display the data as a table using `st.dataframe`.
+	# st.dataframe(
+	# df_filtered,
+	# use_container_width=True,
+	# # column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	# )
 		
 	# Convert the 'timestamp' column to datetime if it's not already
 	df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+	latest_entry = df.loc[df['timestamp'].idxmax()]
+
+	# Layout
+	col1, col2 = st.columns(2)
 	
-	# Plot for timestamp vs battery_voltage
-	fig1 = px.scatter(df_filtered, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
-		      title='Timestamp vs Battery Voltage',
-		      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
+	with col1:
+	    # Display Battery values in a text area (voltage and charge)
+	    st.write("Battery")
+	    battery_info = '\n'.join([f"Voltage: {v}, Discharge Charge: {c}" for v, c in zip(df['battery_voltage'], df['battery_discharge_current'])])
+	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
+	    
+	    # Display Mains values in a text area (voltage and status)
+	    st.write("Mains")
+	    mains_info = '\n'.join([f"Voltage: {v}, Frequency: {f},Charging Current: {c}" for v, f, c in zip(df['mains_voltage'], df['mains_frequency'],df['mains_charging_current'])])
+	    st.text_area("Mains Info", mains_info, height=100, disabled=True)
 	
-	# Plot for timestamp vs inverter_voltage
-	fig2 = px.scatter(df_filtered, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
-		      title='Timestamp vs Inverter Voltage',
-		      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
+	with col2:
+	    # Display Inverter values in a text area (voltage and charge)
+	    st.write("Inverter")
+	    inverter_info = '\n'.join([f"Voltage: {v}, Frequency: {c}" for v, c in zip(df['inverter_voltage'], df['inverter_frequency'])])
+	    st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
+	    
+	    # Display Solar values in a text area (power and charge)
+	    st.write("Solar")
+	    solar_info = '\n'.join([f"Voltage: {v},Power Generation: {p}, Charging Current: {c}" for v, p, c in zip(df['solar_voltage'], df['solar_charging_current'], df['solar_power_generation'])])
+	    st.text_area("Solar Info", solar_info, height=100, disabled=True)
+
 	
-	# Plot for timestamp vs solar_voltage
-	fig3 = px.scatter(df_filtered, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
-		      title='Timestamp vs Solar Voltage',
-		      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
 	
-	# Display the figures
-	st.plotly_chart(fig1, use_container_width=True)
-	st.plotly_chart(fig2, use_container_width=True)
-	st.plotly_chart(fig3, use_container_width=True)
+
+
+
+
+
+
+	
+	# # Plot for timestamp vs battery_voltage
+	# fig1 = px.scatter(df_filtered, x='timestamp', y='battery_voltage', hover_data=['mac_id'],
+	# 	      title='Timestamp vs Battery Voltage',
+	# 	      labels={'timestamp': 'Timestamp', 'battery_voltage': 'Battery Voltage (V)'})
+	
+	# # Plot for timestamp vs inverter_voltage
+	# fig2 = px.scatter(df_filtered, x='timestamp', y='inverter_voltage', hover_data=['mac_id'],
+	# 	      title='Timestamp vs Inverter Voltage',
+	# 	      labels={'timestamp': 'Timestamp', 'inverter_voltage': 'Inverter Voltage (V)'})
+	
+	# # Plot for timestamp vs solar_voltage
+	# fig3 = px.scatter(df_filtered, x='timestamp', y='solar_voltage', hover_data=['mac_id'],
+	# 	      title='Timestamp vs Solar Voltage',
+	# 	      labels={'timestamp': 'Timestamp', 'solar_voltage': 'Solar Voltage (V)'})
+	
+	# # Display the figures
+	# st.plotly_chart(fig1, use_container_width=True)
+	# st.plotly_chart(fig2, use_container_width=True)
+	# st.plotly_chart(fig3, use_container_width=True)
