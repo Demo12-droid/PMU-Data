@@ -123,23 +123,23 @@ if st.session_state.logged_in:
 	with col1:
 	    # Display Battery values in a text area (voltage and charge)
 	    st.write("Battery")
-	    battery_info = '\n'.join([f"Voltage: {v}, Discharge Charge: {c}" for v, c in zip(df['battery_voltage'], df['battery_discharge_current'])])
+	    battery_info = '\n'.join([f"Voltage: {v}, Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
 	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
 	    
 	    # Display Mains values in a text area (voltage and status)
 	    st.write("Mains")
-	    mains_info = '\n'.join([f"Voltage: {v}, Frequency: {f},Charging Current: {c}" for v, f, c in zip(df['mains_voltage'], df['mains_frequency'],df['mains_charging_current'])])
+	    mains_info = '\n'.join([f"Voltage: {v}, Frequency: {f},Charging Current: {c}" for v, f, c in zip(latest_entry['mains_voltage'], latest_entry['mains_frequency'],latest_entry['mains_charging_current'])])
 	    st.text_area("Mains Info", mains_info, height=100, disabled=True)
 	
 	with col2:
 	    # Display Inverter values in a text area (voltage and charge)
 	    st.write("Inverter")
-	    inverter_info = '\n'.join([f"Voltage: {v}, Frequency: {c}" for v, c in zip(df['inverter_voltage'], df['inverter_frequency'])])
+	    inverter_info = '\n'.join([f"Voltage: {v}, Frequency: {c}" for v, c in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'])])
 	    st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
 	    
 	    # Display Solar values in a text area (power and charge)
 	    st.write("Solar")
-	    solar_info = '\n'.join([f"Voltage: {v},Power Generation: {p}, Charging Current: {c}" for v, p, c in zip(df['solar_voltage'], df['solar_charging_current'], df['solar_power_generation'])])
+	    solar_info = '\n'.join([f"Voltage: {v},Power Generation: {p}, Charging Current: {c}" for v, p, c in zip(latest_entry['solar_voltage'], latest_entry['solar_charging_current'], latest_entry['solar_power_generation'])])
 	    st.text_area("Solar Info", solar_info, height=100, disabled=True)
 
 	
