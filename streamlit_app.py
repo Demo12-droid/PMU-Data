@@ -117,7 +117,7 @@ if st.session_state.logged_in:
 
 	latest_entry = df.loc[[df['timestamp'].idxmax()]]
 
-	st.write(f"Timestamp : ",latest_entry["timestamp"])
+	st.write(f"Timestamp : ",latest_entry["timestamp"].iloc[0])
 	
 	# Layout
 	col1, col2 = st.columns(2)
