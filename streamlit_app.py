@@ -124,9 +124,14 @@ if st.session_state.logged_in:
 	st.write(f"Latest : ",dt.strftime('%Y-%m-%d %H:%M:%S'))
 
 	def get_indicator(value):
-    		return '<span style="color: green;">✔️</span>' if value.split() == "t" else '<span style="color: red;">❌</span>'
+	    if value.strip().lower() == "t":  # Ensure that the string is stripped of whitespace before comparison
+	        # Return an HTML image tag for the true value
+	        return '<img src="image.png" alt="True" width="20" height="20">'
+	    else:
+	        # Return an HTML image tag for the false value
+	        return '<img src="image_off.png" alt="False" width="20" height="20">'
 
-	
+	    
 	# Layout
 	col1, col2 = st.columns(2)
 	
