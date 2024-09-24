@@ -105,12 +105,12 @@ if st.session_state.logged_in:
 	df_filtered = df[df["mac_id"] == filtered_mac_id]
 
 	
-	# # Display the data as a table using `st.dataframe`.
-	# st.dataframe(
-	# df_filtered,
-	# use_container_width=True,
-	# # column_config={"mac_id": st.column_config.TextColumn("mac_id")},
-	# )
+	# Display the data as a table using `st.dataframe`.
+	st.dataframe(
+	df_filtered,
+	use_container_width=True,
+	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	)
 		
 	# Convert the 'timestamp' column to datetime if it's not already
 	df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce', format='mixed')
