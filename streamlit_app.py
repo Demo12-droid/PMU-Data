@@ -110,7 +110,7 @@ if st.session_state.logged_in:
 
     # Battery Status
     with col1:
-        battery_col1, battery_col2 = st.columns([0.3,0.7])
+        battery_col1, battery_col2 = st.columns([0.5,0.5])
         with battery_col1:
             st.markdown("**Battery Status:**")
         with battery_col2:
@@ -120,7 +120,7 @@ if st.session_state.logged_in:
         st.text_area("Battery Info", battery_info, height=100, disabled=True)
 
         # Mains Status
-        mains_col1, mains_col2 = st.columns([0.3,0.7])
+        mains_col1, mains_col2 = st.columns([0.5,0.5])
         with mains_col1:
             st.markdown("**Mains Status:**")
         with mains_col2:
@@ -132,7 +132,7 @@ if st.session_state.logged_in:
     # Inverter and Solar Info
     with col2:
         # Inverter Info
-        inverter_col1, inverter_col2 = st.columns([0.3,0.7])
+        inverter_col1, inverter_col2 = st.columns([0.5,0.5])
         with inverter_col1:
             st.markdown("**Inverter Status:**")
         with inverter_col2:
@@ -142,7 +142,7 @@ if st.session_state.logged_in:
         st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
 
         # Solar Info
-        solar_col1, solar_col2 = st.columns([0.3,0.7])
+        solar_col1, solar_col2 = st.columns([0.5,0.5])
         with solar_col1:
             st.markdown("**Solar Status:**")
         with solar_col2:
