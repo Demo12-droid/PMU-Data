@@ -137,7 +137,7 @@ if st.session_state.logged_in:
 	
 	with col1:
 	    # Display Battery values in a text area (voltage and charge)
-	    st.write(f"<div>Battery Status: {get_indicator(latest_entry['battery_status'].iloc[0]) }</div>", unsafe_allow_html=True)
+	    st.html(f"<div>Battery Status: {get_indicator(latest_entry['battery_status'].iloc[0]) }</div>", unsafe_allow_html=True)
 	    battery_info = '\n'.join([f"Voltage: {v} \n Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
 	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
 	    
