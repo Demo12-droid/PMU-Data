@@ -94,7 +94,7 @@ if st.session_state.logged_in:
     # Convert the 'timestamp' column to datetime
     df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
 
-    latest_entry = df.loc[df['timestamp'].idxmax()]
+    latest_entry = df_filtered.loc[df_filtered['timestamp'].idxmax()]
 
     # Display the latest entry as a table
     # st.dataframe(latest_entry, use_container_width=True)
