@@ -105,19 +105,19 @@ if st.session_state.logged_in:
 	df_filtered = df[df["mac_id"] == filtered_mac_id]
 
 	
-	# Display the data as a table using `st.dataframe`.
-	st.dataframe(
-	df_filtered,
-	use_container_width=True,
-	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
-	)
+	
 		
 	# Convert the 'timestamp' column to datetime if it's not already
 	df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce', format='mixed')
 
 	latest_entry = df.loc[[df['timestamp'].idxmax()]]
 
-
+	# Display the data as a table using `st.dataframe`.
+	st.dataframe(
+	latest_entry,
+	use_container_width=True,
+	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
+	)
 
 	dt = pd.to_datetime(latest_entry["timestamp"].iloc[0])
 	
