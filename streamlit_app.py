@@ -108,31 +108,45 @@ if st.session_state.logged_in:
     # Layout for displaying battery and mains information
     col1, col2 = st.columns(2)
 
+    # Battery Status
     with col1:
-        # Battery Status
-        battery_col1,battery_col2 = st. columns(2)
+        battery_col1, battery_col2 = st.columns(2, spec=[0.3,0.7])
         with battery_col1:
             st.markdown("**Battery Status:**")
         with battery_col2:
-            st.image(get_indicator(latest_entry['battery_status']), width=20)
-        battery_info = f"Voltage: {latest_entry['battery_voltage']} \n Discharge Charge: {latest_entry['battery_discharge_current']}"
+            st.image(get_indicator(latest_entry['battery_status']), width=40)  # Display the image
+
+        battery_info = f"Voltage: {latest_entry['battery_voltage']} V\nDischarge Charge: {latest_entry['battery_discharge_current']} A"
         st.text_area("Battery Info", battery_info, height=100, disabled=True)
 
         # Mains Status
-        st.markdown("**Mains Status:**")
-        st.image(get_indicator(latest_entry['power_status']), width=20)
-        mains_info = f"Voltage: {latest_entry['mains_voltage']} \n Frequency: {latest_entry['mains_frequency']} \n Charging Current: {latest_entry['mains_charging_current']}"
+        mains_col1, mains_col2 = st.columns(2, spec=[0.3,0.7])
+        with mains_col1:
+            st.markdown("**Mains Status:**")
+        with mains_col2:
+            st.image(get_indicator(latest_entry['power_status']), width=40)  # Display the image
+
+        mains_info = f"Voltage: {latest_entry['mains_voltage']} V\nFrequency: {latest_entry['mains_frequency']} Hz\nCharging Current: {latest_entry['mains_charging_current']} A"
         st.text_area("Mains Info", mains_info, height=100, disabled=True)
 
+    # Inverter and Solar Info
     with col2:
         # Inverter Info
-        st.markdown("**Inverter Status:**")
-        st.image(get_indicator(latest_entry['inverter_status']), width=20)
-        inverter_info = f"Voltage: {latest_entry['inverter_voltage']} \n Frequency: {latest_entry['inverter_frequency']} \n Load Current: {latest_entry['load_current_on_inverter']}"
+        inverter_col1, inverter_col2 = st.columns(2, spec=[0.3,0.7])
+        with inverter_col1:
+            st.markdown("**Inverter Status:**")
+        with inverter_col2:
+            st.image(get_indicator(latest_entry['inverter_status']), width=40)  # Display the image
+
+        inverter_info = f"Voltage: {latest_entry['inverter_voltage']} V\nFrequency: {latest_entry['inverter_frequency']} Hz\nLoad Current: {latest_entry['load_current_on_inverter']} A"
         st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
 
         # Solar Info
-        st.markdown("**Solar Status:**")
-        st.image(get_indicator(latest_entry['solar_status']), width=20)
-        solar_info = f"Voltage: {latest_entry['solar_voltage']} \n Power Generation: {latest_entry['solar_power_generation']} \n Charging Current: {latest_entry['solar_charging_current']}"
+        solar_col1, solar_col2 = st.columns(2, spec=[0.3,0.7])
+        with solar_col1:
+            st.markdown("**Solar Status:**")
+        with solar_col2:
+            st.image(get_indicator(latest_entry['solar_status']), width=40)  # Display the image
+
+        solar_info = f"Voltage: {latest_entry['solar_voltage']} V\nPower Generation: {latest_entry['solar_power_generation']} W\nCharging Current: {latest_entry['solar_charging_current']} A"
         st.text_area("Solar Info", solar_info, height=100, disabled=True)
