@@ -126,27 +126,33 @@ if st.session_state.logged_in:
 	def get_indicator(value):
 	    if value.strip().lower() == "t":  # Ensure that the string is stripped of whitespace before comparison
 	        # Return an HTML image tag for the true value
-	        return '<img src="image.png" alt="True" width="20" height="20">'
+	        return "image.png"
 	    else:
 	        # Return an HTML image tag for the false value
-	        return '<img src="image_off.png" alt="False" width="20" height="20">'
+	        return "image_off.png" 
 
 	    
 	# Layout
 	col1, col2 = st.columns(2)
 	
-	with col1:
-	    # Display Battery values in a text area (voltage and charge)
-	    st.markdown(f"<div>Battery Status: {get_indicator(latest_entry['battery_status'].iloc[0]) }</div>", unsafe_allow_html=True)
-	    battery_info = '\n'.join([f"Voltage: {v} \n Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
-	    st.text_area("Battery Info", battery_info, height=100, disabled=True)
-	    
-	    # Display Mains values in a text area (voltage and status)
-	    st.write("Mains" + get_indicator(latest_entry['power_status'].iloc[0]), unsafe_allow_html=True)
-	    mains_info = '\n'.join([f"Voltage: {v} \n Frequency: {f} \n Charging Current: {c}" for v, f, c in zip(latest_entry['mains_voltage'], latest_entry['mains_frequency'],latest_entry['mains_charging_current'])])
-	    st.text_area("Mains Info", mains_info, height=100, disabled=True)
+    with col1:
+        # Display Battery Status
+        st.markdown("<div>Battery Status:</div>", unsafe_allow_html=True)
+        st.image(get_indicator(latest_entry['battery_status'].iloc[0]), width=20)  # Use st.image to show the indicator image
+        
+        # Display Battery values in a text area (voltage and charge)
+        battery_info = '\n'.join([f"Voltage: {v} \n Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
+        st.text_area("Battery Info", battery_info, height=100, disabled=True)
+
+        # Display Mains Status
+        st.markdown("<div>Mains Status:</div>", unsafe_allow_html=True)
+        st.image(get_indicator(latest_entry['power_status'].iloc[0]), width=20)  # Use st.image for Mains status as well
+        
+        # Display Mains values in a text area (voltage and status)
+        mains_info = '\n'.join([f"Voltage: {v} \n Frequency: {f} \n Charging Current: {c}" for v, f, c in zip(latest_entry['mains_voltage'], latest_entry['mains_frequency'], latest_entry['mains_charging_current'])])
+        st.text_area("Mains Info", mains_info, height=100, disabled=True)
 	
-	with col2:
+    with col2:
 	    # Display Inverter values in a text area (voltage and charge)
 	    st.write("Inverter" + get_indicator(latest_entry['inverter_status'].iloc[0]), unsafe_allow_html=True)
 	    inverter_info = '\n'.join([f"Voltage: {v} \n Frequency: {c} \n Load Current: {l}" for v, c, l in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'],latest_entry["load_current_on_inverter"])])
