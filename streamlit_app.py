@@ -1,19 +1,17 @@
-# import altair as alt
 import pandas as pd
 import streamlit as st
 import boto3
 from io import StringIO
-import plotly.express as px
 
 def authenticate(username, password):
-	if st.secrets["username"] == username and st.secrets["password"] == password:
-		return True
-	return False
-	
+    if st.secrets["username"] == username and st.secrets["password"] == password:
+        return True
+    return False
+
 def logout():
-	st.session_state.logged_in = False
-	
-def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key):
+    st.session_state.logged_in = False
+
+def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id, aws_secret_access_key):
     try:
         # Create an S3 client using access keys
         s3_client = boto3.client(
@@ -40,7 +38,7 @@ def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_se
             csv_data = StringIO(body)
 
             # Read the CSV into a DataFrame
-            df = pd.read_csv(csv_data,index_col=False)
+            df = pd.read_csv(csv_data, index_col=False)
 
             return df
         else:
@@ -52,7 +50,7 @@ def get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_se
         return None
 
 if 'logged_in' not in st.session_state:
-	st.session_state.logged_in = False
+    st.session_state.logged_in = False
 
 aws_access_key_id = st.secrets["aws_access_key_id"]
 aws_secret_access_key = st.secrets["aws_secret_access_key"]
@@ -61,104 +59,77 @@ folder_name = st.secrets["folder_name"]
 username = st.secrets["username"]
 password = st.secrets["password"]
 
-
 st.set_page_config(page_title="HYD PMU Data")
 
 # UI for login
 if not st.session_state.logged_in:
-	st.title("Login")
-	username = st.text_input("Username")
-	password = st.text_input("Password", type="password")
-	if st.button("Login"):
-		if authenticate(username, password):
-			st.session_state.logged_in = True
-			st.rerun()
-		else:
-			st.error("Invalid username or password")
+    st.title("Login")
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+    if st.button("Login"):
+        if authenticate(username, password):
+            st.session_state.logged_in = True
+            st.rerun()
+        else:
+            st.error("Invalid username or password")
 
+if st.session_state.logged_in:
+    st.title("Hyderabad PMU Data")
+    st.sidebar.title("Options")
+    if st.sidebar.button("Logout"):
+        logout()
+        st.rerun()
 
-if st.session_state.logged_in:          
+    df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id, aws_secret_access_key)
 
-	# Show the page title and description.
-	st.title("Hyderabad PMU Data")
-	st.sidebar.title("Options")
-	if st.sidebar.button("Logout"):
-	    logout()
-	    st.rerun()
-	
-	df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id , aws_secret_access_key)
-	
-	# Get unique mac_id values
-	unique_mac_ids = df["mac_id"].unique().tolist()
-	mac_id_options = unique_mac_ids
-	
-	# Add a singleselect widget with a default selection of all mac_ids
-	filtered_mac_id = st.selectbox(
-	    "Select mac_id",
-	    options=mac_id_options,
-	    index=0,  # Default selected option
-	    help="You can select a specific mac_id."
-	)
+    # Get unique mac_id values
+    unique_mac_ids = df["mac_id"].unique().tolist()
+    
+    # Add a single-select widget with a default selection of the first mac_id
+    filtered_mac_id = st.selectbox("Select mac_id", options=unique_mac_ids, index=0, help="You can select a specific mac_id.")
 
-	
-	# Filter the dataframe based on the widget input and reshape it.
-	df_filtered = df[df["mac_id"] == filtered_mac_id]
+    # Filter the dataframe based on the selected mac_id
+    df_filtered = df[df["mac_id"] == filtered_mac_id]
 
-	
-	
-		
-	# Convert the 'timestamp' column to datetime if it's not already
-	df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce', format='mixed')
+    # Convert the 'timestamp' column to datetime
+    df['timestamp'] = pd.to_datetime(df['timestamp'], errors='coerce')
 
-	latest_entry = df.loc[[df_filtered['timestamp'].idxmax()]]
+    latest_entry = df.loc[df['timestamp'].idxmax()]
 
-	# Display the data as a table using `st.dataframe`.
-	st.dataframe(
-	latest_entry,
-	use_container_width=True,
-	# column_config={"mac_id": st.column_config.TextColumn("mac_id")},
-	)
+    # Display the latest entry as a table
+    st.dataframe(latest_entry, use_container_width=True)
 
-	dt = pd.to_datetime(latest_entry["timestamp"].iloc[0])
-	
-	st.write(f"Latest : ",dt.strftime('%Y-%m-%d %H:%M:%S'))
+    dt = pd.to_datetime(latest_entry["timestamp"])
+    st.write(f"Latest: {dt.strftime('%Y-%m-%d %H:%M:%S')}")
 
-	def get_indicator(value):
-	    if value.strip().lower() == "t":  # Ensure that the string is stripped of whitespace before comparison
-	        # Return an HTML image tag for the true value
-	        return "image.png"
-	    else:
-	        # Return an HTML image tag for the false value
-	        return "image_off.png" 
+    def get_indicator(value):
+        return "image.png" if value.strip().lower() == "t" else "image_off.png"
 
-	    
-	# Layout
-	col1, col2 = st.columns(2)
-	
+    # Layout for displaying battery and mains information
+    col1, col2 = st.columns(2)
+
     with col1:
-        # Display Battery Status
-        st.markdown("<div>Battery Status:</div>", unsafe_allow_html=True)
-        st.image(get_indicator(latest_entry['battery_status'].iloc[0]), width=20)  # Use st.image to show the indicator image
-        
-        # Display Battery values in a text area (voltage and charge)
-        battery_info = '\n'.join([f"Voltage: {v} \n Discharge Charge: {c}" for v, c in zip(latest_entry['battery_voltage'], latest_entry['battery_discharge_current'])])
+        # Battery Status
+        st.markdown("**Battery Status:**")
+        st.image(get_indicator(latest_entry['battery_status']), width=20)
+        battery_info = f"Voltage: {latest_entry['battery_voltage']} \n Discharge Charge: {latest_entry['battery_discharge_current']}"
         st.text_area("Battery Info", battery_info, height=100, disabled=True)
 
-        # Display Mains Status
-        st.markdown("<div>Mains Status:</div>", unsafe_allow_html=True)
-        st.image(get_indicator(latest_entry['power_status'].iloc[0]), width=20)  # Use st.image for Mains status as well
-        
-        # Display Mains values in a text area (voltage and status)
-        mains_info = '\n'.join([f"Voltage: {v} \n Frequency: {f} \n Charging Current: {c}" for v, f, c in zip(latest_entry['mains_voltage'], latest_entry['mains_frequency'], latest_entry['mains_charging_current'])])
+        # Mains Status
+        st.markdown("**Mains Status:**")
+        st.image(get_indicator(latest_entry['power_status']), width=20)
+        mains_info = f"Voltage: {latest_entry['mains_voltage']} \n Frequency: {latest_entry['mains_frequency']} \n Charging Current: {latest_entry['mains_charging_current']}"
         st.text_area("Mains Info", mains_info, height=100, disabled=True)
-	
+
     with col2:
-	    # Display Inverter values in a text area (voltage and charge)
-	    st.write("Inverter" + get_indicator(latest_entry['inverter_status'].iloc[0]), unsafe_allow_html=True)
-	    inverter_info = '\n'.join([f"Voltage: {v} \n Frequency: {c} \n Load Current: {l}" for v, c, l in zip(latest_entry['inverter_voltage'], latest_entry['inverter_frequency'],latest_entry["load_current_on_inverter"])])
-	    st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
-	    
-	    # Display Solar values in a text area (power and charge)
-	    st.write("Solar" + get_indicator(latest_entry['solar_status'].iloc[0]), unsafe_allow_html=True)
-	    solar_info = '\n'.join([f"Voltage: {v} \n Power Generation: {p} \n Charging Current: {c}" for v, p, c in zip(latest_entry['solar_voltage'], latest_entry['solar_charging_current'], latest_entry['solar_power_generation'])])
-	    st.text_area("Solar Info", solar_info, height=100, disabled=True)
+        # Inverter Info
+        st.markdown("**Inverter Status:**")
+        st.image(get_indicator(latest_entry['inverter_status']), width=20)
+        inverter_info = f"Voltage: {latest_entry['inverter_voltage']} \n Frequency: {latest_entry['inverter_frequency']} \n Load Current: {latest_entry['load_current_on_inverter']}"
+        st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
+
+        # Solar Info
+        st.markdown("**Solar Status:**")
+        st.image(get_indicator(latest_entry['solar_status']), width=20)
+        solar_info = f"Voltage: {latest_entry['solar_voltage']} \n Power Generation: {latest_entry['solar_power_generation']} \n Charging Current: {latest_entry['solar_charging_current']}"
+        st.text_area("Solar Info", solar_info, height=100, disabled=True)
