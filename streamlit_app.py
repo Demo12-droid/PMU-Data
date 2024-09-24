@@ -97,7 +97,7 @@ if st.session_state.logged_in:
     latest_entry = df.loc[df['timestamp'].idxmax()]
 
     # Display the latest entry as a table
-    st.dataframe(latest_entry, use_container_width=True)
+    # st.dataframe(latest_entry, use_container_width=True)
 
     dt = pd.to_datetime(latest_entry["timestamp"])
     st.write(f"Latest: {dt.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -105,31 +105,45 @@ if st.session_state.logged_in:
     def get_indicator(value):
         return "image.png" if value.strip().lower() == "t" else "image_off.png"
 
+
     # Layout for displaying battery and mains information
     col1, col2 = st.columns(2)
 
+    # Battery Status
     with col1:
-        # Battery Status
         st.markdown("**Battery Status:**")
-        st.image(get_indicator(latest_entry['battery_status']), width=20)
-        battery_info = f"Voltage: {latest_entry['battery_voltage']} \n Discharge Charge: {latest_entry['battery_discharge_current']}"
-        st.text_area("Battery Info", battery_info, height=100, disabled=True)
+        battery_col1, battery_col2 = st.columns([1, 4])  # Create two columns for image and text
+        with battery_col1:
+            st.image(get_indicator(latest_entry['battery_status']), width=40)  # Display the image
+        with battery_col2:
+            battery_info = f"Voltage: {latest_entry['battery_voltage']} V\nDischarge Charge: {latest_entry['battery_discharge_current']} A"
+            st.markdown(battery_info)  # Display the text
 
         # Mains Status
         st.markdown("**Mains Status:**")
-        st.image(get_indicator(latest_entry['power_status']), width=20)
-        mains_info = f"Voltage: {latest_entry['mains_voltage']} \n Frequency: {latest_entry['mains_frequency']} \n Charging Current: {latest_entry['mains_charging_current']}"
-        st.text_area("Mains Info", mains_info, height=100, disabled=True)
+        mains_col1, mains_col2 = st.columns([1, 4])  # Create two columns for image and text
+        with mains_col1:
+            st.image(get_indicator(latest_entry['power_status']), width=40)  # Display the image
+        with mains_col2:
+            mains_info = f"Voltage: {latest_entry['mains_voltage']} V\nFrequency: {latest_entry['mains_frequency']} Hz\nCharging Current: {latest_entry['mains_charging_current']} A"
+            st.markdown(mains_info)  # Display the text
 
+    # Inverter and Solar Info
     with col2:
         # Inverter Info
         st.markdown("**Inverter Status:**")
-        st.image(get_indicator(latest_entry['inverter_status']), width=20)
-        inverter_info = f"Voltage: {latest_entry['inverter_voltage']} \n Frequency: {latest_entry['inverter_frequency']} \n Load Current: {latest_entry['load_current_on_inverter']}"
-        st.text_area("Inverter Info", inverter_info, height=100, disabled=True)
+        inverter_col1, inverter_col2 = st.columns([1, 4])  # Create two columns for image and text
+        with inverter_col1:
+            st.image(get_indicator(latest_entry['inverter_status']), width=40)  # Display the image
+        with inverter_col2:
+            inverter_info = f"Voltage: {latest_entry['inverter_voltage']} V\nFrequency: {latest_entry['inverter_frequency']} Hz\nLoad Current: {latest_entry['load_current_on_inverter']} A"
+            st.markdown(inverter_info)  # Display the text
 
         # Solar Info
         st.markdown("**Solar Status:**")
-        st.image(get_indicator(latest_entry['solar_status']), width=20)
-        solar_info = f"Voltage: {latest_entry['solar_voltage']} \n Power Generation: {latest_entry['solar_power_generation']} \n Charging Current: {latest_entry['solar_charging_current']}"
-        st.text_area("Solar Info", solar_info, height=100, disabled=True)
+        solar_col1, solar_col2 = st.columns([1, 4])  # Create two columns for image and text
+        with solar_col1:
+            st.image(get_indicator(latest_entry['solar_status']), width=40)  # Display the image
+        with solar_col2:
+            solar_info = f"Voltage: {latest_entry['solar_voltage']} V\nPower Generation: {latest_entry['solar_power_generation']} W\nCharging Current: {latest_entry['solar_charging_current']} A"
+            st.markdown(solar_info)  # Display the text
