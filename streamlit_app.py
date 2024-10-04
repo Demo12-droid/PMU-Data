@@ -82,7 +82,7 @@ if st.session_state.logged_in:
 
     df = get_latest_file_from_s3(bucket_name, folder_name, aws_access_key_id, aws_secret_access_key)
     if df == None:
-        dt.write("No files retreived from s3 bucket")
+        st.write("No files retreived from s3 bucket")
     else:
         # st.dataframe(df, use_container_width=True)
         # Get unique mac_id values
